@@ -1,0 +1,25 @@
+{
+  "name" : "Fontanello",
+  "version" : "1.0.0",
+  "description" : "Because you have a weak spot for fonts",
+  "background" : { "scripts": ["background.js"] },
+  "permissions" : [
+    "tabs",
+    "contextMenus",
+    "http://*/*",
+    "https://*/*"
+   ],
+   "content_scripts": [
+     {
+       "matches": [
+         "http://*/*",
+         "https://*/*"
+       ],
+       "js": ["selection.js"],
+       "run_at": "document_start",
+       "all_frames": true
+     }
+   ],
+  "minimum_chrome_version" : "6.0.0.0",
+  "manifest_version": 2
+}
