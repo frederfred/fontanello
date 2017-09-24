@@ -1,3 +1,26 @@
+function RGBToHex(RGB) {
+  const RGBParts = RGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  const HexArr = [];
+
+  delete RGBParts[0];
+
+  RGBParts.forEach((value) => {
+    let hex = parseInt(value, 10).toString(16);
+
+    if (hex.length === 1) {
+      hex = `0${hex}`;
+    }
+
+    HexArr.push(hex);
+  });
+
+  return `#${HexArr.join('')}`;
+}
+
+function isRGB(value) {
+  return !!value.match(/^rgb\(/);
+}
+
 const fontanelloFont = chrome.contextMenus.create({
   title: 'Fontanello font',
   contexts: ['selection'],
@@ -23,6 +46,6 @@ chrome.runtime.onMessage.addListener((fontInfo) => {
   });
 
   chrome.contextMenus.update(fontanelloColor, {
-    title: fontInfo.color,
+    title: isRGB(fontInfo.color) ? RGBToHex(fontInfo.color) : fontInfo.color,
   });
 });
