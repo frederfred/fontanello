@@ -21,6 +21,20 @@ function isRGB(value) {
   return !!value.match(/^rgb\(/);
 }
 
+const fontWeights = {
+  100: '100',
+  200: '200',
+  300: '300',
+  400: '400 (normal)',
+  500: '500',
+  600: '600',
+  700: '700 (bold)',
+  800: '800',
+  900: '900',
+  normal: '400 (normal)',
+  bold: '700 (bold)',
+};
+
 const fontanelloFont = chrome.contextMenus.create({
   title: 'Fontanello font',
   contexts: ['selection'],
@@ -28,6 +42,11 @@ const fontanelloFont = chrome.contextMenus.create({
 
 const fontanelloSize = chrome.contextMenus.create({
   title: 'Fontanello size',
+  contexts: ['selection'],
+});
+
+const fontanelloWeight = chrome.contextMenus.create({
+  title: 'Fontanello weight',
   contexts: ['selection'],
 });
 
@@ -45,6 +64,10 @@ chrome.runtime.onMessage.addListener((fontInfo) => {
     title: `${fontInfo.fontSize} / ${fontInfo.lineHeight}` +
            ' ' +
            `(${parseInt(fontInfo.lineHeight, 10) / parseInt(fontInfo.fontSize, 10)})`,
+  });
+
+  chrome.contextMenus.update(fontanelloWeight, {
+    title: fontWeights[fontInfo.fontWeight],
   });
 
   chrome.contextMenus.update(fontanelloColor, {

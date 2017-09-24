@@ -14,6 +14,7 @@ document.addEventListener('mousemove', (e) => {
     font: style.fontFamily,
     fontSize: style.fontSize,
     lineHeight: style.lineHeight,
+    fontWeight: style.fontWeight,
     color: style.color,
   };
 
