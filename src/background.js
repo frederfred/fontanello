@@ -1,36 +1,28 @@
-
-var fontanelloFont = chrome.contextMenus.create({
-  "id": "fontanelloFont",
-  "title" : "Fontanello font",
-  "type" : "normal",
-  "contexts" : ["selection"],
-  "onclick" : function(e) { e.preventDefault(); }
+const fontanelloFont = chrome.contextMenus.create({
+  title: 'Fontanello font',
+  contexts: ['selection'],
 });
 
-var fontanelloSize = chrome.contextMenus.create({
-  "id": "fontanelloSize",
-  "title" : "Fontanello size",
-  "type" : "normal",
-  "contexts" : ["selection"],
-  "onclick" : function(e) { e.preventDefault(); }
+const fontanelloSize = chrome.contextMenus.create({
+  title: 'Fontanello size',
+  contexts: ['selection'],
 });
 
-var fontanelloColor = chrome.contextMenus.create({
-  "id": "fontanelloColor",
-  "title" : "Fontanello color",
-  "type" : "normal",
-  "contexts" : ["selection"],
-  "onclick" : function(e) { e.preventDefault(); }
+const fontanelloColor = chrome.contextMenus.create({
+  title: 'Fontanello color',
+  contexts: ['selection'],
 });
 
-chrome.runtime.onMessage.addListener(function(fontInfo, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((fontInfo) => {
   chrome.contextMenus.update(fontanelloFont, {
-    "title": fontInfo.font
+    title: fontInfo.font,
   });
+
   chrome.contextMenus.update(fontanelloSize, {
-    "title": fontInfo.fontSize + " / " + fontInfo.lineHeight
+    title: `${fontInfo.fontSize} / ${fontInfo.lineHeight}`,
   });
+
   chrome.contextMenus.update(fontanelloColor, {
-    "title": fontInfo.color
+    title: fontInfo.color,
   });
 });
