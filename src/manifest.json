@@ -15,7 +15,7 @@
          "http://*/*",
          "https://*/*"
        ],
-       "js": ["selection.js"],
+       "js": ["client.js"],
        "run_at": "document_start",
        "all_frames": true
      }
