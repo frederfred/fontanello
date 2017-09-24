@@ -42,7 +42,9 @@ chrome.runtime.onMessage.addListener((fontInfo) => {
   });
 
   chrome.contextMenus.update(fontanelloSize, {
-    title: `${fontInfo.fontSize} / ${fontInfo.lineHeight}`,
+    title: `${fontInfo.fontSize} / ${fontInfo.lineHeight}` +
+           ' ' +
+           `(${parseInt(fontInfo.lineHeight, 10) / parseInt(fontInfo.fontSize, 10)})`,
   });
 
   chrome.contextMenus.update(fontanelloColor, {
