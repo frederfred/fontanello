@@ -21,6 +21,10 @@ function isRGB(value) {
   return !!value.match(/^rgb\(/);
 }
 
+function round(num, decimals) {
+  return +num.toFixed(decimals);
+}
+
 const fontWeights = {
   100: '100',
   200: '200',
@@ -63,7 +67,7 @@ chrome.runtime.onMessage.addListener((fontInfo) => {
   chrome.contextMenus.update(fontanelloSize, {
     title: `${fontInfo.fontSize} / ${fontInfo.lineHeight}` +
            ' ' +
-           `(${parseInt(fontInfo.lineHeight, 10) / parseInt(fontInfo.fontSize, 10)})`,
+           `(${round(parseInt(fontInfo.lineHeight, 10) / parseInt(fontInfo.fontSize, 10), 3)})`,
   });
 
   chrome.contextMenus.update(fontanelloWeight, {
