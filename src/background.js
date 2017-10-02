@@ -46,6 +46,10 @@ function round(num, decimals) {
   return +num.toFixed(decimals);
 }
 
+function unitlessLineHeight(size, lineHeight) {
+  return round(parseFloat(lineHeight, 10) / parseFloat(size, 10), 3);
+}
+
 const fontWeights = {
   100: '100',
   200: '200',
@@ -72,7 +76,7 @@ Object.keys(menuItems).forEach((key) => {
 
 chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.family.value = fontData.family;
-  menuItems.size.value = `${fontData.size} / ${fontData.lineHeight} (${round(parseFloat(fontData.lineHeight, 10) / parseFloat(fontData.size, 10), 3)})`;
+  menuItems.size.value = `${fontData.size} / ${fontData.lineHeight} (${unitlessLineHeight(fontData.size, fontData.lineHeight)})`;
   menuItems.weight.value = fontWeights[fontData.weight];
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
 
