@@ -1,3 +1,19 @@
+const menuItems = {};
+
+function copyTextToClipboard(text) {
+  const textarea = document.createElement('textarea');
+
+  textarea.value = text;
+
+  document.body.appendChild(textarea);
+
+  textarea.select();
+
+  document.execCommand('copy');
+
+  document.body.removeChild(textarea);
+}
+
 function RGBToHex(RGB) {
   const RGBParts = RGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
   const HexArr = [];
@@ -42,39 +58,43 @@ const fontWeights = {
 const fontanelloFont = chrome.contextMenus.create({
   title: 'Fontanello font',
   contexts: ['selection'],
+  onclick: () => {
+    copyTextToClipboard(menuItems.font);
+  },
 });
 
 const fontanelloSize = chrome.contextMenus.create({
   title: 'Fontanello size',
   contexts: ['selection'],
+  onclick: () => {
+    copyTextToClipboard(menuItems.size);
+  },
 });
 
 const fontanelloWeight = chrome.contextMenus.create({
   title: 'Fontanello weight',
   contexts: ['selection'],
+  onclick: () => {
+    copyTextToClipboard(menuItems.weight);
+  },
 });
 
 const fontanelloColor = chrome.contextMenus.create({
   title: 'Fontanello color',
   contexts: ['selection'],
+  onclick: () => {
+    copyTextToClipboard(menuItems.color);
+  },
 });
 
 chrome.runtime.onMessage.addListener((fontInfo) => {
-  chrome.contextMenus.update(fontanelloFont, {
-    title: fontInfo.font,
-  });
+  menuItems.font = fontInfo.font;
+  menuItems.size = `${fontInfo.fontSize} / ${fontInfo.lineHeight} (${round(parseFloat(fontInfo.lineHeight, 10) / parseFloat(fontInfo.fontSize, 10), 3)})`;
+  menuItems.weight = fontWeights[fontInfo.fontWeight];
+  menuItems.color = isRGB(fontInfo.color) ? RGBToHex(fontInfo.color) : fontInfo.color;
 
-  chrome.contextMenus.update(fontanelloSize, {
-    title: `${fontInfo.fontSize} / ${fontInfo.lineHeight}` +
-           ' ' +
-           `(${round(parseFloat(fontInfo.lineHeight, 10) / parseFloat(fontInfo.fontSize, 10), 3)})`,
-  });
-
-  chrome.contextMenus.update(fontanelloWeight, {
-    title: fontWeights[fontInfo.fontWeight],
-  });
-
-  chrome.contextMenus.update(fontanelloColor, {
-    title: isRGB(fontInfo.color) ? RGBToHex(fontInfo.color) : fontInfo.color,
-  });
+  chrome.contextMenus.update(fontanelloFont, { title: menuItems.font });
+  chrome.contextMenus.update(fontanelloSize, { title: menuItems.size });
+  chrome.contextMenus.update(fontanelloWeight, { title: menuItems.weight });
+  chrome.contextMenus.update(fontanelloColor, { title: menuItems.color });
 });
