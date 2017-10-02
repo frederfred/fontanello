@@ -11,10 +11,10 @@ document.addEventListener('mousemove', (e) => {
   previousTarget = e.target;
   style = window.getComputedStyle(e.target);
   fontData = {
-    font: style.fontFamily,
-    fontSize: style.fontSize,
+    family: style.fontFamily,
+    size: style.fontSize,
     lineHeight: style.lineHeight,
-    fontWeight: style.fontWeight,
+    weight: style.fontWeight,
     color: style.color,
   };
 
