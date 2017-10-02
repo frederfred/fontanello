@@ -67,7 +67,7 @@ chrome.runtime.onMessage.addListener((fontInfo) => {
   chrome.contextMenus.update(fontanelloSize, {
     title: `${fontInfo.fontSize} / ${fontInfo.lineHeight}` +
            ' ' +
-           `(${round(parseInt(fontInfo.lineHeight, 10) / parseInt(fontInfo.fontSize, 10), 3)})`,
+           `(${round(parseFloat(fontInfo.lineHeight, 10) / parseFloat(fontInfo.fontSize, 10), 3)})`,
   });
 
   chrome.contextMenus.update(fontanelloWeight, {
