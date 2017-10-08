@@ -4,10 +4,7 @@
   "description" : "Because you have a weak spot for fonts",
   "background" : { "scripts": ["background.js"] },
   "permissions" : [
-    "tabs",
-    "contextMenus",
-    "http://*/*",
-    "https://*/*"
+    "contextMenus"
    ],
    "content_scripts": [
      {
