@@ -51,15 +51,15 @@ function unitlessLineHeight(size, lineHeight) {
 }
 
 const fontWeights = {
-  100: '100',
-  200: '200',
-  300: '300',
+  100: '100 (thin)',
+  200: '200 (extra light)',
+  300: '300 (light)',
   400: '400 (normal)',
-  500: '500',
-  600: '600',
+  500: '500 (medium)',
+  600: '600 (semi bold)',
   700: '700 (bold)',
-  800: '800',
-  900: '900',
+  800: '800 (extra bold)',
+  900: '900 (black)',
   normal: '400 (normal)',
   bold: '700 (bold)',
 };
