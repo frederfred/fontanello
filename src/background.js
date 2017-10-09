@@ -19,6 +19,12 @@ function copyTextToClipboard(text) {
   document.body.removeChild(textarea);
 }
 
+function firstFontFamily(fontFamily) {
+  const quotes = /"/g;
+
+  return fontFamily.split(',')[0].replace(quotes, '');
+}
+
 function RGBToHex(RGB) {
   const RGBParts = RGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
   const HexArr = [];
@@ -75,7 +81,7 @@ Object.keys(menuItems).forEach((key) => {
 });
 
 chrome.runtime.onMessage.addListener((fontData) => {
-  menuItems.family.value = fontData.family;
+  menuItems.family.value = firstFontFamily(fontData.family);
   menuItems.weight.value = fontWeights[fontData.weight];
   menuItems.size.value = `${fontData.size} / ${fontData.lineHeight} (${unitlessLineHeight(fontData.size, fontData.lineHeight)})`;
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
