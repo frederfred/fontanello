@@ -1,7 +1,7 @@
 const menuItems = {
   family: { contextMenu: null, value: '' },
-  size: { contextMenu: null, value: '' },
   weight: { contextMenu: null, value: '' },
+  size: { contextMenu: null, value: '' },
   color: { contextMenu: null, value: '' },
 };
 
@@ -76,8 +76,8 @@ Object.keys(menuItems).forEach((key) => {
 
 chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.family.value = fontData.family;
-  menuItems.size.value = `${fontData.size} / ${fontData.lineHeight} (${unitlessLineHeight(fontData.size, fontData.lineHeight)})`;
   menuItems.weight.value = fontWeights[fontData.weight];
+  menuItems.size.value = `${fontData.size} / ${fontData.lineHeight} (${unitlessLineHeight(fontData.size, fontData.lineHeight)})`;
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
 
   Object.keys(menuItems).forEach((key) => {

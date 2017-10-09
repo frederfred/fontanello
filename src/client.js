@@ -12,9 +12,9 @@ document.addEventListener('mousemove', (e) => {
   style = window.getComputedStyle(e.target);
   fontData = {
     family: style.fontFamily,
+    weight: style.fontWeight,
     size: style.fontSize,
     lineHeight: style.lineHeight,
-    weight: style.fontWeight,
     color: style.color,
   };
 
