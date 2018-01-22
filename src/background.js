@@ -73,7 +73,7 @@ const fontWeights = {
 Object.keys(menuItems).forEach((key) => {
   menuItems[key].contextMenu = chrome.contextMenus.create({
     title: '-',
-    contexts: ['selection'],
+    contexts: ['all'],
     onclick: () => {
       copyTextToClipboard(menuItems[key].value);
     },
