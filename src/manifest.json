@@ -1,7 +1,7 @@
 {
   "name" : "Fontanello",
   "version" : "0.0.1",
-  "description" : "Because you have a weak spot for fonts",
+  "description" : "A browser extension that lets you display the basic typographic styles of a text by right-clicking it.",
   "background" : { "scripts": ["background.js"] },
   "permissions" : [
     "contextMenus"
