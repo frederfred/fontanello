@@ -6,7 +6,7 @@ __Fontanello is a browser extension for Google Chrome and Firefox that lets you 
 
 Check out [https://fontanello.oktavilla.se](https://fontanello.oktavilla.se) for more information.
 
-✌️ Fontanello was created by [Oktavilla](http://oktavilla.se) to make our work life more pleasurable. We are a design agency in Stockholm, Sweden. Read more at [https://oktavilla.se](https://oktavilla.se).
+✌️ Fontanello was created by [Oktavilla](https://oktavilla.se) to make our work life more pleasurable. We are a design agency in Stockholm, Sweden. Read more at [https://oktavilla.se](https://oktavilla.se).
 
 ## Installation
 
