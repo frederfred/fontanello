@@ -1,2 +1,20 @@
-# fontanello
-Because you have a weak spot for fonts
+# Fontanello 👁
+
+> Because you have a weak spot for fonts
+
+__Fontanello is a browser extension for Google Chrome and Firefox that lets you display the basic typographic styles of a text by right-clicking it.__
+
+Check out [https://fontanello.oktavilla.se](https://fontanello.oktavilla.se) for more information.
+
+✌️ Fontanello was created by [Oktavilla](http://oktavilla.se) to make our work life more pleasurable. We are a design agency in Stockholm, Sweden. Read more at [https://oktavilla.se](https://oktavilla.se).
+
+## Installation
+
+* [Chrome extension](https://chrome.google.com/webstore/detail/fontanello/jdlhfjlpaijjhklfadlhbbmpjfddkglc)
+* [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/fontanello/)
+
+## Contributions
+
+Suggestions and pull requests are encouraged!
+
+If you have found a bug create a issue describing it [here on GitHub](https://github.com/Oktavilla/fontanello/issues). Please include information about you browser, system and any information you think is important to recreate the bug.
