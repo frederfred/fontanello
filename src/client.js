@@ -1,6 +1,6 @@
 let previousTarget = null;
 
-document.addEventListener('mousemove', (e) => {
+function onMouseMove(e) {
   let style = null;
   let fontData = null;
 
@@ -18,7 +18,15 @@ document.addEventListener('mousemove', (e) => {
     color: style.color,
   };
 
-  chrome.runtime.sendMessage(fontData);
+  try {
+    chrome.runtime.sendMessage(fontData);
+  } catch (e) {
+    document.removeEventListener('mousemove', onMouseMove, false);
+
+    throw(e);
+  }
 
   return false;
-}, false);
+}
+
+document.addEventListener('mousemove', onMouseMove, false);
