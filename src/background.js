@@ -56,6 +56,12 @@ function unitlessLineHeight(size, lineHeight) {
   return round(parseFloat(lineHeight, 10) / parseFloat(size, 10), 3);
 }
 
+function resetContextMenus() {
+  Object.keys(menuItems).forEach((key) => {
+    chrome.contextMenus.update(menuItems[key].contextMenu, { title: '-' });
+  });
+}
+
 const fontWeights = {
   100: '100 (thin)',
   200: '200 (extra light)',
@@ -90,3 +96,6 @@ chrome.runtime.onMessage.addListener((fontData) => {
     chrome.contextMenus.update(menuItems[key].contextMenu, { title: menuItems[key].value });
   });
 });
+
+chrome.tabs.onActivated.addListener(() => resetContextMenus());
+chrome.windows.onFocusChanged.addListener(() => resetContextMenus());
