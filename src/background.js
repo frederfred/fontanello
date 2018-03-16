@@ -1,8 +1,8 @@
 const menuItems = {
-  family: { contextMenu: null, value: '' },
-  weight: { contextMenu: null, value: '' },
-  size: { contextMenu: null, value: '' },
-  color: { contextMenu: null, value: '' },
+  family: { contextMenu: null, value: '', defaultValue: 'Reload' },
+  weight: { contextMenu: null, value: '', defaultValue: 'the' },
+  size: { contextMenu: null, value: '', defaultValue: 'page' },
+  color: { contextMenu: null, value: '', defaultValue: 'please (•‿•)' },
 };
 
 function copyTextToClipboard(text) {
@@ -58,7 +58,10 @@ function unitlessLineHeight(size, lineHeight) {
 
 function resetContextMenus() {
   Object.keys(menuItems).forEach((key) => {
-    chrome.contextMenus.update(menuItems[key].contextMenu, { title: '-' });
+    chrome.contextMenus.update(menuItems[key].contextMenu, {
+      title: menuItems[key].defaultValue,
+      enabled: false,
+    });
   });
 }
 
@@ -78,7 +81,7 @@ const fontWeights = {
 
 Object.keys(menuItems).forEach((key) => {
   menuItems[key].contextMenu = chrome.contextMenus.create({
-    title: '-',
+    title: menuItems[key].defaultValue,
     contexts: ['all'],
     onclick: () => {
       copyTextToClipboard(menuItems[key].value);
@@ -93,7 +96,10 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
 
   Object.keys(menuItems).forEach((key) => {
-    chrome.contextMenus.update(menuItems[key].contextMenu, { title: menuItems[key].value });
+    chrome.contextMenus.update(menuItems[key].contextMenu, {
+      title: menuItems[key].value,
+      enabled: true,
+    });
   });
 });
 
