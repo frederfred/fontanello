@@ -1,8 +1,8 @@
 const menuItems = {
-  family: { contextMenu: null, value: '' },
-  weight: { contextMenu: null, value: '' },
-  size: { contextMenu: null, value: '' },
-  color: { contextMenu: null, value: '' },
+  family: { contextMenu: null, value: '', defaultValue: 'Reload' },
+  weight: { contextMenu: null, value: '', defaultValue: 'the' },
+  size: { contextMenu: null, value: '', defaultValue: 'page' },
+  color: { contextMenu: null, value: '', defaultValue: 'please (•‿•)' },
 };
 
 function copyTextToClipboard(text) {
@@ -56,6 +56,15 @@ function unitlessLineHeight(size, lineHeight) {
   return round(parseFloat(lineHeight, 10) / parseFloat(size, 10), 3);
 }
 
+function resetContextMenus() {
+  Object.keys(menuItems).forEach((key) => {
+    chrome.contextMenus.update(menuItems[key].contextMenu, {
+      title: menuItems[key].defaultValue,
+      enabled: false,
+    });
+  });
+}
+
 const fontWeights = {
   100: '100 (thin)',
   200: '200 (extra light)',
@@ -72,7 +81,7 @@ const fontWeights = {
 
 Object.keys(menuItems).forEach((key) => {
   menuItems[key].contextMenu = chrome.contextMenus.create({
-    title: '-',
+    title: menuItems[key].defaultValue,
     contexts: ['all'],
     onclick: () => {
       copyTextToClipboard(menuItems[key].value);
@@ -87,6 +96,12 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
 
   Object.keys(menuItems).forEach((key) => {
-    chrome.contextMenus.update(menuItems[key].contextMenu, { title: menuItems[key].value });
+    chrome.contextMenus.update(menuItems[key].contextMenu, {
+      title: menuItems[key].value,
+      enabled: true,
+    });
   });
 });
+
+chrome.tabs.onActivated.addListener(() => resetContextMenus());
+chrome.windows.onFocusChanged.addListener(() => resetContextMenus());
