@@ -1,8 +1,8 @@
 const menuItems = {
-  family: { contextMenu: null, value: '', defaultValue: 'Reload' },
-  weight: { contextMenu: null, value: '', defaultValue: 'the' },
-  size: { contextMenu: null, value: '', defaultValue: 'page' },
-  color: { contextMenu: null, value: '', defaultValue: 'please (•‿•)' },
+  family: { contextMenu: null, value: '', defaultValue: 'Please' },
+  weight: { contextMenu: null, value: '', defaultValue: 'reload' },
+  size: { contextMenu: null, value: '', defaultValue: 'the' },
+  color: { contextMenu: null, value: '', defaultValue: 'page (•‿•)' },
 };
 
 function copyTextToClipboard(text) {
