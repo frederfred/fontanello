@@ -4,6 +4,7 @@ const menuItems = {
   size: { contextMenu: null, value: '', defaultValue: 'the' },
   color: { contextMenu: null, value: '', defaultValue: 'page' },
   letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  variants: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
   featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
   variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
 };
@@ -105,6 +106,7 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.size.value = fontSizeAndLineHeight(fontData.size, fontData.lineHeight);
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
   menuItems.letterSpacing.value = `${fontData.letterSpacing} (letter-spacing)`;
+  menuItems.variants.value = `${fontData.variants} (variants)`;
   menuItems.featureSettings.value = `${fontData.featureSettings} (features)`;
   menuItems.variationSettings.value = `${fontData.variationSettings} (variables)`;
 
