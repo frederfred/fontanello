@@ -2,7 +2,10 @@ const menuItems = {
   family: { contextMenu: null, value: '', defaultValue: 'Please' },
   weight: { contextMenu: null, value: '', defaultValue: 'reload' },
   size: { contextMenu: null, value: '', defaultValue: 'the' },
-  color: { contextMenu: null, value: '', defaultValue: 'page (•‿•)' },
+  color: { contextMenu: null, value: '', defaultValue: 'page' },
+  letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
 };
 
 function copyTextToClipboard(text) {
@@ -101,6 +104,9 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.weight.value = fontWeights[fontData.weight];
   menuItems.size.value = fontSizeAndLineHeight(fontData.size, fontData.lineHeight);
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
+  menuItems.letterSpacing.value = `${fontData.letterSpacing} (letter-spacing)`;
+  menuItems.featureSettings.value = `${fontData.featureSettings} (features)`;
+  menuItems.variationSettings.value = `${fontData.variationSettings} (variables)`;
 
   Object.keys(menuItems).forEach((key) => {
     chrome.contextMenus.update(menuItems[key].contextMenu, {

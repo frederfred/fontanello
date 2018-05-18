@@ -16,6 +16,9 @@ function onMouseMove(e) {
     size: style.fontSize,
     lineHeight: style.lineHeight,
     color: style.color,
+    letterSpacing: style.letterSpacing,
+    featureSettings: style.fontFeatureSettings,
+    variationSettings: style.fontVariationSettings,
   };
 
   try {
