@@ -8,6 +8,20 @@ const menuItems = {
   featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
   variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
 };
+const menuSections = [
+  [
+    'family',
+    'weight',
+    'size',
+    'color',
+  ],
+  [
+    'letterSpacing',
+    'variants',
+    'featureSettings',
+    'variationSettings',
+  ],
+];
 
 function copyTextToClipboard(text) {
   const textarea = document.createElement('textarea');
@@ -90,13 +104,22 @@ const fontWeights = {
   bold: '700 (bold)',
 };
 
-Object.keys(menuItems).forEach((key) => {
-  menuItems[key].contextMenu = chrome.contextMenus.create({
-    title: menuItems[key].defaultValue,
-    contexts: ['all'],
-    onclick: () => {
-      copyTextToClipboard(menuItems[key].value);
-    },
+menuSections.forEach((items, i) => {
+  if (i !== 0) {
+    chrome.contextMenus.create({
+      type: 'separator',
+      contexts: ['all'],
+    });
+  }
+
+  items.forEach((key) => {
+    menuItems[key].contextMenu = chrome.contextMenus.create({
+      title: menuItems[key].defaultValue,
+      contexts: ['all'],
+      onclick: () => {
+        copyTextToClipboard(menuItems[key].value);
+      },
+    });
   });
 });
 
