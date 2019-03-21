@@ -117,7 +117,9 @@ menuSections.forEach((items, i) => {
       title: menuItems[key].defaultValue,
       contexts: ['all'],
       onclick: () => {
-        copyTextToClipboard(menuItems[key].value);
+        const value = menuItems[key].value.replace(/^.+: /, '');
+
+        copyTextToClipboard(value);
       },
     });
   });
