@@ -128,10 +128,10 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.weight.value = fontWeights[fontData.weight];
   menuItems.size.value = fontSizeAndLineHeight(fontData.size, fontData.lineHeight);
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
-  menuItems.letterSpacing.value = `${fontData.letterSpacing} (letter-spacing)`;
-  menuItems.variants.value = `${fontData.variants} (variants)`;
-  menuItems.featureSettings.value = `${fontData.featureSettings} (features)`;
-  menuItems.variationSettings.value = `${fontData.variationSettings} (variables)`;
+  menuItems.letterSpacing.value = `letter-spacing: ${fontData.letterSpacing}`;
+  menuItems.featureSettings.value = `features: ${fontData.featureSettings}`;
+  menuItems.variants.value = `variants: ${fontData.variants}`;
+  menuItems.variationSettings.value = `variables: ${fontData.variationSettings}`;
 
   Object.keys(menuItems).forEach((key) => {
     chrome.contextMenus.update(menuItems[key].contextMenu, {
