@@ -56,6 +56,13 @@ function unitlessLineHeight(size, lineHeight) {
   return round(parseFloat(lineHeight, 10) / parseFloat(size, 10), 3);
 }
 
+function fontSizeAndLineHeight(size, lineHeight) {
+  const part1 = `${size} / ${lineHeight}`;
+  const part2 = unitlessLineHeight(size, lineHeight);
+
+  return `${part1}${part2 ? ` (${part2})` : ''}`;
+}
+
 function resetContextMenus() {
   Object.keys(menuItems).forEach((key) => {
     chrome.contextMenus.update(menuItems[key].contextMenu, {
@@ -92,7 +99,7 @@ Object.keys(menuItems).forEach((key) => {
 chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.family.value = firstFontFamily(fontData.family);
   menuItems.weight.value = fontWeights[fontData.weight];
-  menuItems.size.value = `${fontData.size} / ${fontData.lineHeight} (${unitlessLineHeight(fontData.size, fontData.lineHeight)})`;
+  menuItems.size.value = fontSizeAndLineHeight(fontData.size, fontData.lineHeight);
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
 
   Object.keys(menuItems).forEach((key) => {
