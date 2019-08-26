@@ -2,8 +2,26 @@ const menuItems = {
   family: { contextMenu: null, value: '', defaultValue: 'Please' },
   weight: { contextMenu: null, value: '', defaultValue: 'reload' },
   size: { contextMenu: null, value: '', defaultValue: 'the' },
-  color: { contextMenu: null, value: '', defaultValue: 'page (•‿•)' },
+  color: { contextMenu: null, value: '', defaultValue: 'page' },
+  letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  variants: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
 };
+const menuSections = [
+  [
+    'family',
+    'weight',
+    'size',
+    'color',
+  ],
+  [
+    'letterSpacing',
+    'variants',
+    'featureSettings',
+    'variationSettings',
+  ],
+];
 
 function copyTextToClipboard(text) {
   const textarea = document.createElement('textarea');
@@ -86,13 +104,24 @@ const fontWeights = {
   bold: '700 (bold)',
 };
 
-Object.keys(menuItems).forEach((key) => {
-  menuItems[key].contextMenu = chrome.contextMenus.create({
-    title: menuItems[key].defaultValue,
-    contexts: ['all'],
-    onclick: () => {
-      copyTextToClipboard(menuItems[key].value);
-    },
+menuSections.forEach((items, i) => {
+  if (i !== 0) {
+    chrome.contextMenus.create({
+      type: 'separator',
+      contexts: ['all'],
+    });
+  }
+
+  items.forEach((key) => {
+    menuItems[key].contextMenu = chrome.contextMenus.create({
+      title: menuItems[key].defaultValue,
+      contexts: ['all'],
+      onclick: () => {
+        const value = menuItems[key].value.replace(/^.+: /, '');
+
+        copyTextToClipboard(value);
+      },
+    });
   });
 });
 
@@ -101,6 +130,10 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.weight.value = fontWeights[fontData.weight];
   menuItems.size.value = fontSizeAndLineHeight(fontData.size, fontData.lineHeight);
   menuItems.color.value = isRGB(fontData.color) ? RGBToHex(fontData.color) : fontData.color;
+  menuItems.letterSpacing.value = `letter-spacing: ${fontData.letterSpacing}`;
+  menuItems.featureSettings.value = `features: ${fontData.featureSettings}`;
+  menuItems.variants.value = `variants: ${fontData.variants}`;
+  menuItems.variationSettings.value = `variables: ${fontData.variationSettings}`;
 
   Object.keys(menuItems).forEach((key) => {
     chrome.contextMenus.update(menuItems[key].contextMenu, {
