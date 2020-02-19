@@ -1,12 +1,13 @@
 const menuItems = {
-  family: { contextMenu: null, value: '', defaultValue: 'Please' },
-  weight: { contextMenu: null, value: '', defaultValue: 'reload' },
-  size: { contextMenu: null, value: '', defaultValue: 'the' },
-  color: { contextMenu: null, value: '', defaultValue: 'page' },
-  letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
-  variants: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
-  featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
-  variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  family: { contextMenu: null, value: '', defaultValue: 'Please', onclick: copy },
+  weight: { contextMenu: null, value: '', defaultValue: 'reload', onclick: copy },
+  size: { contextMenu: null, value: '', defaultValue: 'the', onclick: copy },
+  color: { contextMenu: null, value: '', defaultValue: 'page', onclick: copy },
+  letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  variants: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  contrast: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: () => chrome.windows.create({ url: 'https://contrastchecker.online' }) },
 };
 const menuSections = [
   [
@@ -20,6 +21,9 @@ const menuSections = [
     'variants',
     'featureSettings',
     'variationSettings',
+  ],
+  [
+    'contrast',
   ],
 ];
 
@@ -43,14 +47,20 @@ function firstFontFamily(fontFamily) {
   return fontFamily.split(',')[0].replace(quotes, '');
 }
 
+function RGBParts(RGB) {
+  const parts = RGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+  parts.shift();
+
+  return parts.map(v => parseInt(v, 10));
+}
+
 function RGBToHex(RGB) {
-  const RGBParts = RGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  const parts = RGBParts(RGB);
   const HexArr = [];
 
-  delete RGBParts[0];
-
-  RGBParts.forEach((value) => {
-    let hex = parseInt(value, 10).toString(16);
+  parts.forEach((value) => {
+    let hex = value.toString(16);
 
     if (hex.length === 1) {
       hex = `0${hex}`;
@@ -81,6 +91,62 @@ function fontSizeAndLineHeight(size, lineHeight) {
   return `${part1}${part2 ? ` (${part2})` : ''}`;
 }
 
+function luminanace(r, g, b) {
+  const a = [r, g, b].map((v) => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+function meetWCAG(ratio, size) {
+  const result = {};
+  const largeSize = 18;
+  const ratios = {
+    small: {
+      aa: 4.5,
+      aaa: 7,
+    },
+    large: {
+      aa: 3,
+      aaa: 4.5,
+    },
+  };
+
+  if (parseInt(size, 10) < largeSize) { // small
+    result.aa = ratio >= ratios.small.aa;
+    result.aaa = ratio >= ratios.small.aaa;
+  } else { // large
+    result.aa = ratio >= ratios.large.aa;
+    result.aaa = ratio >= ratios.large.aaa;
+  }
+
+  return result;
+}
+
+function contrast(rgb1, rgb2) {
+  const result = (luminanace(rgb1[0], rgb1[1], rgb1[2]) + 0.05) / (luminanace(rgb2[0], rgb2[1], rgb2[2]) + 0.05);
+
+  return result < 1 ? 1 / result : result;
+}
+
+function contrastMessage(color1, color2, size) {
+  const ratio = contrast(RGBParts(color1), RGBParts(color2));
+  const WCAGResult = meetWCAG(ratio, size);
+  let message = round(ratio, 2);
+
+  if (WCAGResult.aaa) {
+    message += ' (AAA)';
+  } else if (WCAGResult.aa) {
+    message += ' (AA)';
+  } else {
+    message += ' (fail)';
+  }
+
+  return message;
+}
+
 function resetContextMenus() {
   Object.keys(menuItems).forEach((key) => {
     chrome.contextMenus.update(menuItems[key].contextMenu, {
@@ -88,6 +154,12 @@ function resetContextMenus() {
       enabled: false,
     });
   });
+}
+
+function copy(item) {
+  const value = item.value.replace(/^.+: /, '');
+
+  copyTextToClipboard(value);
 }
 
 const fontWeights = {
@@ -116,11 +188,7 @@ menuSections.forEach((items, i) => {
     menuItems[key].contextMenu = chrome.contextMenus.create({
       title: menuItems[key].defaultValue,
       contexts: ['all'],
-      onclick: () => {
-        const value = menuItems[key].value.replace(/^.+: /, '');
-
-        copyTextToClipboard(value);
-      },
+      onclick: () => menuItems[key].onclick(menuItems[key]),
     });
   });
 });
@@ -134,6 +202,7 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.featureSettings.value = `features: ${fontData.featureSettings}`;
   menuItems.variants.value = `variants: ${fontData.variants}`;
   menuItems.variationSettings.value = `variables: ${fontData.variationSettings}`;
+  menuItems.contrast.value = `contrast ratio: ${contrastMessage(fontData.color, fontData.backgroundColor, fontData.size)}`;
 
   Object.keys(menuItems).forEach((key) => {
     chrome.contextMenus.update(menuItems[key].contextMenu, {
