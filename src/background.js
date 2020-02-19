@@ -1,13 +1,13 @@
 const menuItems = {
-  family: { contextMenu: null, value: '', defaultValue: 'Please' },
-  weight: { contextMenu: null, value: '', defaultValue: 'reload' },
-  size: { contextMenu: null, value: '', defaultValue: 'the' },
-  color: { contextMenu: null, value: '', defaultValue: 'page' },
-  letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
-  variants: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
-  featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
-  variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
-  contrast: { contextMenu: null, value: '', defaultValue: '(•‿•)' },
+  family: { contextMenu: null, value: '', defaultValue: 'Please', onclick: copy },
+  weight: { contextMenu: null, value: '', defaultValue: 'reload', onclick: copy },
+  size: { contextMenu: null, value: '', defaultValue: 'the', onclick: copy },
+  color: { contextMenu: null, value: '', defaultValue: 'page', onclick: copy },
+  letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  variants: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
+  contrast: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: () => chrome.windows.create({ url: 'https://contrastchecker.online' }) },
 };
 const menuSections = [
   [
@@ -156,6 +156,12 @@ function resetContextMenus() {
   });
 }
 
+function copy(item) {
+  const value = item.value.replace(/^.+: /, '');
+
+  copyTextToClipboard(value);
+}
+
 const fontWeights = {
   100: '100 (thin)',
   200: '200 (extra light)',
@@ -182,11 +188,7 @@ menuSections.forEach((items, i) => {
     menuItems[key].contextMenu = chrome.contextMenus.create({
       title: menuItems[key].defaultValue,
       contexts: ['all'],
-      onclick: () => {
-        const value = menuItems[key].value.replace(/^.+: /, '');
-
-        copyTextToClipboard(value);
-      },
+      onclick: () => menuItems[key].onclick(menuItems[key]),
     });
   });
 });
