@@ -3,7 +3,7 @@
   "version" : "1.2.0",
   "description" : "A browser extension that lets you display the basic typographic styles of a text by right-clicking it.",
   "background" : { "scripts": ["background.js"] },
-  "permissions" : ["contextMenus"],
+  "permissions" : ["activeTab", "contextMenus"],
    "content_scripts": [
      {
        "matches": ["<all_urls>"],
