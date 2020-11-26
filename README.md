@@ -4,9 +4,9 @@
 
 __Fontanello is a browser extension for Google Chrome and Firefox that lets you display the basic typographic styles of a text by right-clicking it.__
 
-Check out [https://fontanello.oktavilla.se](https://fontanello.oktavilla.se) for more information.
+Check out [https://fontanello.app](https://fontanello.app) for more information.
 
-✌️ Fontanello was created by [Oktavilla](https://oktavilla.se) to make our work life more pleasurable. We are a design agency in Stockholm, Sweden. Read more at [https://oktavilla.se](https://oktavilla.se).
+✌️ Fontanello was created by [Lars Wästfelt](https://www.instagram.com/lawa/) & [Fred Bergman](https://fbergman.se/) to make our work life more pleasurable.
 
 ## Installation
 
@@ -17,4 +17,4 @@ Check out [https://fontanello.oktavilla.se](https://fontanello.oktavilla.se) for
 
 Suggestions and pull requests are encouraged!
 
-If you have found a bug create a issue describing it [here on GitHub](https://github.com/Oktavilla/fontanello/issues). Please include information about you browser, system and any information you think is important to recreate the bug.
+If you have found a bug create a issue describing it [here on GitHub](https://github.com/frederfred/fontanello/issues). Please include information about you browser, system and any information you think is important to recreate the bug.
