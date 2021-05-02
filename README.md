@@ -12,6 +12,7 @@ Check out [https://fontanello.app](https://fontanello.app) for more information.
 
 * [Chrome extension](https://chrome.google.com/webstore/detail/fontanello/jdlhfjlpaijjhklfadlhbbmpjfddkglc)
 * [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/fontanello/)
+* [Edge add-on](https://microsoftedge.microsoft.com/addons/detail/fontanello/epddfkhkmkepnboafddmpdmkgapbfecg)
 
 ## Contributions
 
