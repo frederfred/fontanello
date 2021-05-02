@@ -132,6 +132,10 @@ function contrast(rgb1, rgb2) {
 }
 
 function contrastMessage(color1, color2, size) {
+  if (!isRGB(color1) || !isRGB(color2)) {
+    return ' –';
+  }
+
   const ratio = contrast(RGBParts(color1), RGBParts(color2));
   const WCAGResult = meetWCAG(ratio, size);
   let message = round(ratio, 2);
