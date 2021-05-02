@@ -13,8 +13,7 @@ function getBgColor(el) {
     }
   }
 
-  // return defaultBg;
-  return 'rgb(255, 255, 255)'; // todo: handle rgba
+  return defaultBg;
 }
 
 function onMouseMove(e) {
