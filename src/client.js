@@ -41,12 +41,11 @@ function onMouseMove(e) {
     backgroundColor,
   };
 
-  try {
+  if (chrome.runtime?.id) {
     chrome.runtime.sendMessage(fontData);
-  } catch (e) {
+  } else {
+    // Extension has probably been reloaded, and the user needs to refresh the page.
     document.removeEventListener('mousemove', onMouseMove, false);
-
-    throw(e);
   }
 
   return false;

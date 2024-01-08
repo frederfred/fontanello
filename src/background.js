@@ -1,13 +1,13 @@
 const menuItems = {
-  family: { contextMenu: null, value: '', defaultValue: 'Please', onclick: copy },
-  weight: { contextMenu: null, value: '', defaultValue: 'reload', onclick: copy },
-  size: { contextMenu: null, value: '', defaultValue: 'the', onclick: copy },
-  color: { contextMenu: null, value: '', defaultValue: 'page', onclick: copy },
-  letterSpacing: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
-  variants: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
-  featureSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
-  variationSettings: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: copy },
-  contrast: { contextMenu: null, value: '', defaultValue: '(•‿•)', onclick: () => chrome.windows.create({ url: 'https://contrastchecker.online' }) },
+  family: { value: '', defaultValue: 'Please', onclick: copy },
+  weight: { value: '', defaultValue: 'reload', onclick: copy },
+  size: { value: '', defaultValue: 'the', onclick: copy },
+  color: { value: '', defaultValue: 'page', onclick: copy },
+  letterSpacing: { value: '', defaultValue: '(•‿•)', onclick: copy },
+  variants: { value: '', defaultValue: '(•‿•)', onclick: copy },
+  featureSettings: { value: '', defaultValue: '(•‿•)', onclick: copy },
+  variationSettings: { value: '', defaultValue: '(•‿•)', onclick: copy },
+  contrast: { value: '', defaultValue: '(•‿•)', onclick: () => chrome.windows.create({ url: 'https://contrastchecker.online' }) },
 };
 const menuSections = [
   [
@@ -26,25 +26,35 @@ const menuSections = [
     'contrast',
   ],
 ];
+const copyTextToClipboardPermissions = ['offscreen', 'clipboardWrite'];
 
-function copyTextToClipboard(text) {
-  const textarea = document.createElement('textarea');
+async function copyTextToClipboard(text) {
+  await chrome.offscreen.createDocument({
+    url: 'offscreen.html',
+    reasons: [chrome.offscreen.Reason.CLIPBOARD],
+    justification: 'Write text to the clipboard.',
+  });
 
-  textarea.value = text;
-
-  document.body.appendChild(textarea);
-
-  textarea.select();
-
-  document.execCommand('copy');
-
-  document.body.removeChild(textarea);
+  chrome.runtime.sendMessage({
+    type: 'copy-data-to-clipboard',
+    target: 'offscreen-doc',
+    data: text,
+  });
 }
 
 function firstFontFamily(fontFamily) {
   const quotes = /"/g;
 
   return fontFamily.split(',')[0].replace(quotes, '');
+}
+
+function resetContextMenus() {
+  Object.keys(menuItems).forEach((key) => {
+    chrome.contextMenus.update(key, {
+      title: menuItems[key].defaultValue,
+      enabled: false,
+    });
+  });
 }
 
 function RGBParts(RGB) {
@@ -151,19 +161,26 @@ function contrastMessage(color1, color2, size) {
   return message;
 }
 
-function resetContextMenus() {
-  Object.keys(menuItems).forEach((key) => {
-    chrome.contextMenus.update(menuItems[key].contextMenu, {
-      title: menuItems[key].defaultValue,
-      enabled: false,
-    });
-  });
-}
-
 function copy(item) {
   const value = item.value.replace(/^.+: /, '');
 
-  copyTextToClipboard(value);
+  chrome.permissions.contains({
+    permissions: copyTextToClipboardPermissions,
+  }, (result) => {
+    if (result) { // The extension has the permissions.
+      copyTextToClipboard(value);
+    } else {
+      chrome.permissions.request({
+        permissions: copyTextToClipboardPermissions,
+      }, (granted) => {
+        if (granted) {
+          copyTextToClipboard(value);
+        } else {
+          // The user didn't grant the permissions. Do nothing.
+        }
+      });
+    }
+  });
 }
 
 const fontWeights = {
@@ -180,21 +197,28 @@ const fontWeights = {
   bold: '700 (bold)',
 };
 
-menuSections.forEach((items, i) => {
-  if (i !== 0) {
-    chrome.contextMenus.create({
-      type: 'separator',
-      contexts: ['all'],
-    });
-  }
+chrome.runtime.onInstalled.addListener(() => {
+  menuSections.forEach((items, i) => {
+    if (i !== 0) {
+      chrome.contextMenus.create({
+        id: `separator${i}`,
+        type: 'separator',
+        contexts: ['all'],
+      });
+    }
 
-  items.forEach((key) => {
-    menuItems[key].contextMenu = chrome.contextMenus.create({
-      title: menuItems[key].defaultValue,
-      contexts: ['all'],
-      onclick: () => menuItems[key].onclick(menuItems[key]),
+    items.forEach((key) => {
+      chrome.contextMenus.create({
+        id: key,
+        title: menuItems[key].defaultValue,
+        contexts: ['all'],
+      });
     });
   });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  menuItems[info.menuItemId].onclick(menuItems[info.menuItemId]);
 });
 
 chrome.runtime.onMessage.addListener((fontData) => {
@@ -209,7 +233,7 @@ chrome.runtime.onMessage.addListener((fontData) => {
   menuItems.contrast.value = `contrast ratio: ${contrastMessage(fontData.color, fontData.backgroundColor, fontData.size)}`;
 
   Object.keys(menuItems).forEach((key) => {
-    chrome.contextMenus.update(menuItems[key].contextMenu, {
+    chrome.contextMenus.update(key, {
       title: menuItems[key].value,
       enabled: true,
     });
