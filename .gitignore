@@ -1,0 +1,2 @@
+# Zip files are used to package the extension for distribution. Avoid accidentally adding them to the repository.
+*.zip
