@@ -164,23 +164,39 @@ function contrastMessage(color1, color2, size) {
 function copy(item) {
   const value = item.value.replace(/^.+: /, '');
 
-  chrome.permissions.contains({
-    permissions: copyTextToClipboardPermissions,
-  }, (result) => {
-    if (result) { // The extension has the permissions.
-      copyTextToClipboard(value);
-    } else {
-      chrome.permissions.request({
-        permissions: copyTextToClipboardPermissions,
-      }, (granted) => {
-        if (granted) {
-          copyTextToClipboard(value);
-        } else {
-          // The user didn't grant the permissions. Do nothing.
-        }
-      });
-    }
-  });
+  if (isFirefox()) {
+    copyTextToClipboardFirefox(value);
+  } else {
+    chrome.permissions.contains({
+      permissions: copyTextToClipboardPermissions,
+    }, (result) => {
+      if (result) { // The extension has the permissions.
+        copyTextToClipboard(value);
+      } else {
+        chrome.permissions.request({
+          permissions: copyTextToClipboardPermissions,
+        }, (granted) => {
+          if (granted) {
+            copyTextToClipboard(value);
+          } else {
+            // The user didn't grant the permissions. Do nothing.
+          }
+        });
+      }
+    });
+  }
+}
+
+async function copyTextToClipboardFirefox(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error('Failed to copy text to clipboard', err);
+  }
+}
+
+function isFirefox() {
+  return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 }
 
 const fontWeights = {
