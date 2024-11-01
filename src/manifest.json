@@ -1,6 +1,6 @@
 {
   "name" : "Fontanello",
-  "version" : "1.3.0",
+  "version" : "1.4.0",
   "description" : "A browser extension that lets you display the basic typographic styles of a text by right-clicking it.",
   "background" : {
     "service_worker": "background.js",
